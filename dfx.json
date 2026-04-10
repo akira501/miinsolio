@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "canisters": {
+    "backend": {
+      "type": "motoko",
+      "main": "src/backend/main.mo",
+      "packtool": "mops sources",
+      "args": "--package caffeineai-authorization src/backend/vendor/caffeineai-authorization --package caffeineai-http-outcalls src/backend/vendor/caffeineai-http-outcalls"
+    },
+    "frontend": {
+      "type": "assets",
+      "source": ["src/frontend/dist"],
+      "dependencies": ["backend"]
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  }
+}

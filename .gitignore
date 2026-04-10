@@ -1,0 +1,49 @@
+# Build outputs - DO NOT commit
+dist/
+node_modules/
+.mops/
+
+# Lock files (large, not needed for ICP Ninja import)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Font files (large binary assets - served via CDN at runtime)
+*.woff
+*.woff2
+*.ttf
+*.otf
+*.eot
+
+# Backend compiled output
+src/backend/dist/
+
+# Frontend compiled output  
+src/frontend/dist/
+
+# Legacy frontend folder (duplicate of src/frontend)
+frontend/
+
+# ICP local state
+.dfx/
+.icp/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
