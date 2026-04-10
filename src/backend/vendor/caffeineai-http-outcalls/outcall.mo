@@ -2,6 +2,7 @@ import Blob "mo:core/Blob";
 import Text "mo:core/Text";
 import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
+import Array "mo:core/Array";
 
 module {
   // Inline types matching the IC management canister HTTP interface
@@ -60,7 +61,7 @@ module {
   };
 
   public func httpGetRequest(url : Text, extraHeaders : [Header], transform : Transform) : async Text {
-    let headers : [HttpHeader] = extraHeaders.concat([{
+    let headers : [HttpHeader] = Array.append(extraHeaders, [{
       name = "User-Agent";
       value = "caffeine.ai";
     }]);
@@ -84,7 +85,7 @@ module {
   };
 
   public func httpPostRequest(url : Text, extraHeaders : [Header], body : Text, transform : Transform) : async Text {
-    let headers : [HttpHeader] = extraHeaders.concat([
+    let headers : [HttpHeader] = Array.append(extraHeaders, [
       { name = "User-Agent"; value = "caffeine.ai" },
       { name = "Idempotency-Key"; value = "Time-" # Time.now().toText() },
     ]);
