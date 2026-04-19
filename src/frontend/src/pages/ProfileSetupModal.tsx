@@ -24,6 +24,7 @@ export default function ProfileSetupModal({ onComplete }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!displayName.trim() || !identity || !actor) return;
+
     await updateProfile.mutateAsync({
       displayName: displayName.trim(),
       baseCurrency,

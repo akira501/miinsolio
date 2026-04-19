@@ -3,9 +3,23 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import environment from "vite-plugin-environment";
 
+import fs from "fs";
+import path from "path";
+
+let localIiId = process.env.CANISTER_ID_INTERNET_IDENTITY;
+if (!localIiId && process.env.DFX_NETWORK === "local") {
+  try {
+    const canisterIdsPath = path.resolve("../../.dfx/local/canister_ids.json");
+    if (fs.existsSync(canisterIdsPath)) {
+      const canisterIds = JSON.parse(fs.readFileSync(canisterIdsPath, "utf-8"));
+      localIiId = canisterIds.internet_identity.local;
+    }
+  } catch (e) {}
+}
+
 const ii_url =
   process.env.DFX_NETWORK === "local"
-    ? `http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:8081/`
+    ? `http://${localIiId}.localhost:4943/`
     : `https://identity.internetcomputer.org/`;
 
 process.env.II_URL = process.env.II_URL || ii_url;

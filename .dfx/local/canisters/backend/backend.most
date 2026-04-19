@@ -1,0 +1,102 @@
+// Version: 1.0.0
+type Category__671526844 =
+  {#Cash; #Commodity; #Crypto; #Forex; #RealEstate; #Stock};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Map__158565046<K, V> = Map__297112838<K, V>;
+type Map__297112838<K, V> =
+  {var root : Node__46230540<K, V>; var size : Nat__490723111};
+type Map__605269027<K, V> = Map__158565046<K, V>;
+type MetalPrice__238916687 =
+  {currency : Text; price : Float; timestamp : Int};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PortfolioSnapshot__60417650 = Public__349308024;
+type Public__349308024 =
+  {createdAt : Int; date : Int; id : Nat; totalValue : Float};
+type Public__473451348 =
+  {
+    category : Category__671526844;
+    createdAt : Int;
+    currency : Text;
+    id : Nat;
+    manualPrice : Float;
+    name : Text;
+    note : Text;
+    symbol : Text
+  };
+type Public__740085299 =
+  {
+    assetId : Nat;
+    createdAt : Int;
+    currency : Text;
+    date : Int;
+    fee : Float;
+    id : Nat;
+    note : Text;
+    price : Float;
+    quantity : Float;
+    txType : TxType__629526554
+  };
+type Public__884532091 =
+  {
+    baseCurrency : Text;
+    createdAt : Int;
+    displayName : Text;
+    user : Principal
+  };
+type Transaction__67233354 = Public__740085299;
+type TxType__629526554 = {#Buy; #Deposit; #Sell; #Withdraw};
+type UserRole__1054455867 = {#admin; #guest; #user};
+actor {
+  stable var _metalPriceCache : ?MetalPrice__238916687;
+  stable var _metalPriceCacheTime : Int;
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__605269027<Principal, UserRole__1054455867>
+    };
+  stable assets :
+    {
+      var root :
+        Node__46230540<Principal, Map__605269027<Nat, Public__473451348>>;
+      var size : Nat__490723111
+    };
+  stable var exchangeRateCache : [(Text, Float)];
+  stable var exchangeRateCacheTime : Int;
+  stable exchangeRateCacheTtl : Int;
+  stable metalPriceCacheMap :
+    {
+      var root : Node__46230540<Text, MetalPrice__238916687>;
+      var size : Nat__490723111
+    };
+  stable metalPriceCacheTimeMap :
+    {var root : Node__46230540<Text, Int>; var size : Nat__490723111};
+  stable metalPriceCacheTtl : Int;
+  stable var nextAssetId : Nat;
+  stable var nextSnapshotId : Nat;
+  stable var nextTransactionId : Nat;
+  stable snapshots :
+    {
+      var root :
+        Node__46230540<Principal,
+                        Map__605269027<Nat, PortfolioSnapshot__60417650>>;
+      var size : Nat__490723111
+    };
+  stable transactions :
+    {
+      var root :
+        Node__46230540<Principal, Map__605269027<Nat, Transaction__67233354>>;
+      var size : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, Public__884532091>;
+      var size : Nat__490723111
+    }
+};

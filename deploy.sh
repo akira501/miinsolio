@@ -1,30 +1,40 @@
 #!/bin/bash
 set -e 
-# Usage: deploy.sh
 
-# Define cleanup function for exit
-cleanup() {
-    # Kill the icp-cli network process if it's running
-    icp network stop
-    exit $1
-}
+# Usage: deploy.sh [network]
+# Default to local network if not provided
+NETWORK=${1:-local}
 
-# Handle script interruption
-trap 'cleanup 1' INT TERM
+echo "Deploying to network: $NETWORK"
 
+if [ "$NETWORK" = "local" ]; then
+    # Ensure local replica is running
+    echo "Starting local replica in background..."
+    dfx start --background || echo "Replica might already be running"
+fi
 
-icp network start -d
-icp canister create --environment local frontend
-icp canister create --environment local backend
-export BACKEND_CANISTER_ID=$(icp canister settings show --environment local --id-only backend)
-export STORAGE_GATEWAY_URL=http://localhost:6188
-export II_URL=http://rdmx6-jaaaa-aaaaa-aaadq-cai.localhost:8000
+# Install dependencies just to be sure
+pnpm install --prefer-offline
 
-icp deploy --environment local frontend backend
+# Ensure mops dependencies are updated
+cd src/backend && mops install && cd ../../
 
+# Generate Declarations
+dfx generate backend
 
-echo "Press Ctrl+C to stop the deployment and exit."
-# This loop keeps the script running until interrupted by Ctrl+C.
-while true; do
-    sleep 2
-done
+if [ "$NETWORK" = "local" ]; then
+    echo "Deploying Internet Identity..."
+    dfx deploy internet_identity --network local
+fi
+
+# Build frontend explicitly before uploading to asset canister
+pnpm build
+
+# Deploy canisters
+dfx deploy --network $NETWORK
+
+echo "Deployment to $NETWORK finished successfully!"
+
+if [ "$NETWORK" = "local" ]; then
+    echo "Local replica is still running in background. You can stop it with 'dfx stop'."
+fi
