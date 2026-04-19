@@ -152,7 +152,13 @@ export default function App() {
       </div>
     );
   }
+  // Test local
+  // const isLocal =
+  //   window.location.hostname === "localhost" ||
+  //   window.location.hostname === "127.0.0.1";
 
+  // if (!isAuthenticated && !isLocal) {
+  // IC mainnet
   if (!isAuthenticated) {
     return (
       <>

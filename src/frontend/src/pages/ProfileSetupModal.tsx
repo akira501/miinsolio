@@ -23,6 +23,21 @@ export default function ProfileSetupModal({ onComplete }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Test local    
+    // const isLocal =
+    //   window.location.hostname === "localhost" ||
+    //   window.location.hostname === "127.0.0.1";
+
+    // if (!displayName.trim()) return;
+
+    // if (isLocal && (!identity || !actor)) {
+    //   onComplete();
+    //   return;
+    // }
+
+    // if (!identity || !actor) return;
+
+    // IC mainnet
     if (!displayName.trim() || !identity || !actor) return;
 
     await updateProfile.mutateAsync({
